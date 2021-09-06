@@ -60,13 +60,14 @@ int main()
   std::cout << std::endl;
   c1=cc1; // opérateur = (d'affectation) (si on met le type au début : pas une affectation mais déclarations)
   std::cout << std::endl;
-  c2=8;
+  c2=8; // int + opérateur =
+  if(LaClasse()){} // default + bool + ~
   std::cout << std::endl;
-  if(cv1)
+  if(cv1) // opérateur bool
     {
-      cv1=F(10);
-      cv1=F(c1);
-      cv1=c1.F(c2);
+      cv1=F(10); // int + copy + int + copy + opérateur = (premier copy car le param est passé en copy, second copy car return passé en copy)
+      cv1=F(c1); // copy + int + copy + opérateur =
+      cv1=c1.F(c2); // copy c2 + copy vv + int + copy + copy + opérateur = (pas de copy car l'opé = prends en paramètre une réfeérence constance ce qui évite de faire une copie)
     }
 
   std::cout << "Tableaux \n";
