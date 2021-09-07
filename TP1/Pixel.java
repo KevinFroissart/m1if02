@@ -1,3 +1,4 @@
+package TP1;
 public class Pixel {
     private int un;
     private int deux;

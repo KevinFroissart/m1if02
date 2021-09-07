@@ -1,3 +1,6 @@
+package TP1;
+import TP1.Pixel;
+
 public class Image {
     private int hauteur;
     private int largeur;
