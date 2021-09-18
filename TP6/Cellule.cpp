@@ -12,17 +12,45 @@ private:
 };
 
 template<typename T>
-class List
+class Liste
 {
 public:
-    List()
+    Liste()
     {
         head = nullptr;
         tail = head;
         taille = 0;
     }
 
-     void addHead(T data)
+    Liste(const Liste<T> &l)
+    {
+        head = l.head;
+        tail = l.tail;
+        taille = l.taille;
+    }
+
+    Liste(const Liste<T> &&l)
+    {
+        head = std::move(l.head);
+        tail = std::move(l.tail);
+        taille = std::move(l.taille);
+    }
+
+    Liste<T> &operator=(const Liste &autre)
+    {
+        taille = 0;
+        head = nullptr;
+        Cellule<T> *tmp = autre.head;
+        while(tmp->next != nullptr)
+        {
+            addHead(tmp->data);
+            tmp = tmp->next;
+        }
+        addTail(tmp->data);
+        return *this;
+    }
+
+    void addHead(T data)
     {
         head = new Cellule<T>(data, head);
         if(taille == 0) tail = head;
@@ -48,6 +76,19 @@ public:
         std::cout << affichage << std::endl;
     }
 
+    virtual ~Liste()
+    {
+        while(head->next!=nullptr)
+        {
+            Cellule<T> *tmp = head;
+            head = tmp->next;
+            tmp->next = nullptr;
+            --taille;
+            delete tmp;
+        }
+        delete tail;
+    }
+
 private:
     Cellule<T> *head;
     Cellule<T> *tail;
@@ -56,7 +97,7 @@ private:
 
 int main()
 {
-    List<int> l;
+    Liste<int> l;
     l.addHead(1);
     l.addHead(2);
     l.afficher();
