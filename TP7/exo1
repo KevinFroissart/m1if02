@@ -1,0 +1,6 @@
+1) std::dequeue<int> d(5);
+2) std::generate(d.begin(), d.end(), Generator(4))
+3) std::copy(d.being(), d.end(), std::ostream_iterator<int>(std::cout, ' '));
+4) std::set<int> s1(d.begin(), d.end()) //pas le droit d'utiliser les valeurs déférencées même si ce n'est pas un const iterator
+7) std::set s3;
+8) 
