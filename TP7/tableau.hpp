@@ -285,11 +285,38 @@ std::istream  & operator>> (std::istream &is, Tableau<T,agrandissement> & V)
 }
 //==============================================================
 
-template <typename T>
+template <typename T, int _n>
 class TablIterator
 {
-  
-
+private:
+  T _value*;
+  int _n;
+public:
+  TablIterator(T* value) : _value(value) {}
+  TablIterator<T> &operator++() {
+    ++_value;
+    return *this;
+  }
+  TablIterator<T> &operator++(T x) {
+    TablIterator<T> iter = *this;
+    ++_value;
+    return iter;
+  }
+  T &operator*() {
+    return *_value;
+  }
+  T* &operator->() {
+    return _value;
+  }
+  bool &operator!=(const TablIterator<T> &other) {
+    return _value != other._value;
+  }
+  TablIterator<T> begin() {
+    return TablIterator<T>(_value);
+  }
+  TablIterator<T> end() {
+    return TablIterator<T>(_value + _n);
+  }
 };
 
 #endif
