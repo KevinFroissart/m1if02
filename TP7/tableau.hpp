@@ -288,7 +288,7 @@ std::istream  & operator>> (std::istream &is, Tableau<T,agrandissement> & V)
 template <typename T>
 class TablIterator
 {
-    
+  
 
 };
 
