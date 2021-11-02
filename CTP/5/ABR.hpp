@@ -10,21 +10,38 @@ private:
     Noeud<T>* racine;
     size_t size;
 public:
+
+    // Constructeur par défaut
     ABR() : racine(nullptr), size(0) {};
+
+    // Constructeur par copie
     ABR(const ABR &that) {
         *this = that;
     }
+
+    // Constructeur par référence
+    // note : par de const ici
     ABR(ABR &&that) {
         *this = std::move(that);
     }
+
+    // Destructeur
     virtual ~ABR() {
         delete racine;
     }
+
+    // Opérateur d'assignation par copie
+    // Ici on fait une copie profonde pour ne pas doubler le pointeur (via le new)
     ABR &operator=(const ABR &that) {
         this->racine = new Noeud<T>(that.racine);
         this->size = that.size;
         return *this;
     }
+
+    // Opérateur d'assignation par référence
+    // Ici pas besoin du std::move car on utilise des types primitifs
+    // On swap le pointer et on met l'origine à nullptr
+    // Fin du rule of 5
     ABR &operator=(ABR &&that) {
         if(this!=&that) {
             delete this->racine;
@@ -34,6 +51,8 @@ public:
         }
         return *this;
     }
+
+    // On met un const pour assurer que les données ne seront pas modifiées
     void insert(const T &data) {
         this->size++;
         Noeud<T> *noeud = new Noeud<T>(data);
@@ -51,6 +70,8 @@ public:
             }
         }
     }
+
+    // Pareil ici on remet un const
     bool find(const T &data) const {
         Noeud<T> *courant = racine;
         while(courant != nullptr) {
@@ -66,9 +87,11 @@ public:
         return false;
     }
 
+    // On déclare une template friend pour que l'opérateur puisse accéder aux attributs privés
     template <typename U>
     friend std::ostream &operator<<(std::ostream &out, const ABR<U> &arbre);
 
+    // On oublie pas le & et le const qui sont primordiaux, à connaitre par coeur
     std::ostream &print(std::ostream &out, Noeud<T> *noeud) const {
         if(noeud != nullptr) {
             if(noeud->gauche != nullptr) print(out, noeud->gauche);
@@ -78,6 +101,7 @@ public:
         return out;
     }
 
+    // On déclare une inner-class pour l'itérateur
     class iterator {
     private:
         const ABR<T> *tree;
@@ -147,7 +171,7 @@ public:
         return find_it(data);
     }
 
-    // Référence constante pour data :)
+    // On passe une référence constante pour assurer quelle ne sera pas modifiée
     iterator find_it(const T &data) {
         Noeud<T> *courant = racine;
         while(courant != nullptr) {
@@ -167,6 +191,5 @@ public:
         return ite;
     }
 };
-
 
 #endif
