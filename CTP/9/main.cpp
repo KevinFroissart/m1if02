@@ -1,13 +1,11 @@
 #include <iostream>
 #include <cstdlib>
-#include "Noeud.hpp"
 #include "ABR.hpp"
 
 template <typename U>
-std::ostream &operator<<(std::ostream &out, const ABR<U> &arbre) {
-    return arbre.print(out, arbre.racine);
+std::ostream &operator<<(std::ostream &out, const ABR<U> &that) {
+    return that.print(out, that.racine);
 }
-
 
 int main() {
 
@@ -22,13 +20,6 @@ int main() {
     for(;it!=ite;++it)
         std::cout << *it << std::endl;
         
-    std::cout << *tree.insert_it(42) << std::endl;
-    std::cout << *tree.find_it(42) << std::endl;
-
-    ABR<int> tree1;
-    ABR<int> tree2;
-
-    tree1 = tree2;
 
     return 0;
 }

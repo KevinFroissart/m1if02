@@ -8,34 +8,38 @@ template <typename T>
 class ABR {
 private:
     Noeud<T> *racine;
-    size_t pos;
+    size_t taille;
 public:
-
-    ABR() : racine(nullptr), pos(0) {}
-    ABR(const ABR<T> &that) {
+    ABR() : racine(nullptr), taille(0) {
+        std::cout << "ABR()" << std::endl;
+    }
+    ABR(const ABR &that) {
+        std::cout << "ABR(const ABR &that)" << std::endl;
         *this = that;
     }
-    ABR(ABR<T> &&that) {
+    ABR(ABR &&that) {
+        std::cout << "ABR(ABR &&that)" << std::endl;
         *this = std::move(that);
     }
+    ABR &operator=(const ABR &that) {
+        std::cout << "ABR &operator=(const ABR &that)" << std::endl;
+        this->racine = that.racine;
+        this->taille = that.taille;
+        return *this;
+    }
+    ABR &operator=(ABR &&that) {
+        std::cout << "ABR &operator=(ABR &&that)" << std::endl;
+        this->racine = std::move(that.racine);
+        this->taille = that.taille;
+        that.racine = nullptr;
+        return *this;
+    }
     virtual ~ABR() {
+        std::cout << "~ABR()" << std::endl;
         delete racine;
     }
-    ABR &operator=(const ABR<T> &that) {
-        this->racine = that.racine;
-        this->pos = that.pos;
-        return *this;
-    }
-    ABR &operator=(ABR<T> &&that) {
-        if(*this != that) {
-            this->racine = std::move(new Noeud<T>(that.racine));
-            this->pos = that.pos;
-            that.racine = nullptr;
-        }
-        return *this;
-    }
     void insert(const T &data) {
-        this->pos++;
+        this->taille++;
         Noeud<T> *noeud = new Noeud<T>(data);
         if(this->racine == nullptr) this->racine = noeud;
         else {
@@ -51,22 +55,22 @@ public:
             }
         }
     }
+
     bool find(const T &data) {
-        if(this->racine != nullptr) {
-            Noeud<T> *courant = this->racine;
-            while(courant != nullptr) {
-                if(courant->data == data) return true;
-                if(data < courant->data) {
-                    if(courant->gauche == nullptr) return false;
-                    courant = courant->gauche;
-                } else {
-                    if(courant->droite == nullptr) return false;
-                    courant = courant->droite;
-                }
+        Noeud<T> *courant = this->racine;
+        while(courant != nullptr) {
+            if(courant->data == data) return true;
+            if(data < courant->data) {
+                courant = courant->gauche;
+            } else {
+                courant = courant->droite;
             }
         }
         return false;
     }
+
+    template <typename U>
+    friend std::ostream &operator<<(std::ostream &out, const ABR<U> &that);
 
     std::ostream &print(std::ostream &out, Noeud<T> *noeud) const {
         if(noeud != nullptr) {
@@ -76,9 +80,6 @@ public:
         }
         return out;
     }
-
-    template <typename U>
-    friend std::ostream &operator<<(std::ostream &out, const ABR<U> &arbre);
 
     class iterator {
     private:
@@ -120,34 +121,8 @@ public:
     }
 
     iterator end() {
-        return iterator(this, this->pos);
-    }
-
-    iterator insert_it(const T &data) {
-        this->pos++;
-        Noeud<T> *noeud = new Noeud<T>(data);
-        if(this->racine == nullptr) this->racine = noeud;
-        else {
-            Noeud<T> *courant = this->racine;
-            while(courant != noeud) {
-                if(data < courant->data) {
-                    if(courant->gauche == nullptr) courant->gauche = noeud;
-                    courant = courant->gauche;
-                } else {
-                    if(courant->droite == nullptr) courant->droite = noeud;
-                    courant = courant->droite;
-                }
-            }
-        }
-        return find_it(data);
-    }
-    iterator find_it(const T &data) {
-        ABR<int>::iterator it=begin();
-        ABR<int>::iterator ite=end();
-        for(;it!=ite;++it)
-            if(*it == data) return it;
-        return ite;
-    }
+        return iterator(this, this->taille);
+    } 
 
 };
 
