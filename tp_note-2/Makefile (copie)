@@ -1,0 +1,9 @@
+
+main: main.cpp MyPair.h Map.h Reduce.h
+	g++ -Wall main.cpp -o main
+
+clean:
+	rm *.o
+
+veryclean:
+	rm *.out
